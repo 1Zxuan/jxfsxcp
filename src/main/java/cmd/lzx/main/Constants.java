@@ -6,19 +6,21 @@ package cmd.lzx.main;
  */
 public interface Constants {
 
-    public static final String CHECKIP = "baidu.com";
+    public static final Integer version = 1;
 
-    public static final Integer THISVERSION = 2;
+    public static final String ConfigURL = "https://raw.githubusercontent.com/1Zxuan/jxfsxcp/master/src/main/resources/config.properties";
 
-    public static final String VERSION = "version";
+    public static final String AppStatic = "app.static";
 
-    public static final String ConfigURL = "https://raw.githubusercontent.com/1Zxuan/jxf/master/src/main/resources/config.properties";
+    public static final String AppVersion = "app.version";
 
-    //标记指令
-    public static final String COMMAND = "jxf.command";
+    public static final String COMMAND = "app.command";
 
-    //标记是否可以使用
-    public static final String NORMAL = "jxf.normal";
+    public static final String ZCFileName = "app.zc";
+
+    public static final String CGFileName = "app.cg";
+
+    public static final String ResultSize = "result.size";
 
     //标记目标邮件
     public static final String EMAILRECEIVEURL = "receive.email.url";
@@ -46,4 +48,7 @@ public interface Constants {
     public static final String EMAILDEBUG="email.debug";
 
     public static final String PUBLIC_IP = "public.ip";
+
+    public static final String RESULTFILESIZE = "result.file.size";
+
 }
