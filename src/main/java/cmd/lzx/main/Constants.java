@@ -16,12 +16,6 @@ public interface Constants {
 
     public static final String COMMAND = "app.command";
 
-    public static final String ZCFileName = "app.zc";
-
-    public static final String CGFileName = "app.cg";
-
-    public static final String ResultSize = "result.size";
-
     //标记目标邮件
     public static final String EMAILRECEIVEURL = "receive.email.url";
 
